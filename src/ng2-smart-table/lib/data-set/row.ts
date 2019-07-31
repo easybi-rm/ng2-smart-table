@@ -1,6 +1,7 @@
 import { Cell } from './cell';
 import { Column } from './column';
 import { DataSet } from './data-set';
+import { cloneDeep } from 'lodash';
 
 export class Row {
 
@@ -30,7 +31,7 @@ export class Row {
   }
 
   getNewData(): any {
-    const values = Object.assign({}, this.data);
+    const values = cloneDeep(this.data);
     this.getCells().forEach((cell) => values[cell.getColumn().id] = cell.newValue);
     return values;
   }

@@ -4,6 +4,7 @@ import { Grid } from './lib/grid';
 import { DataSource } from './lib/data-source/data-source';
 import { Row } from './lib/data-set/row';
 import { LocalDataSource } from './lib/data-source/local/local.data-source';
+import { merge } from 'lodash';
 
 @Component({
   selector: 'ng2-smart-table',
@@ -167,7 +168,7 @@ export class Ng2SmartTableComponent implements OnChanges {
   }
 
   prepareSettings(): Object {
-    return Object.assign({}, this.defaultSettings, this.settings);
+    return merge({}, this.defaultSettings, this.settings);
   }
 
   changePage($event: any) {
