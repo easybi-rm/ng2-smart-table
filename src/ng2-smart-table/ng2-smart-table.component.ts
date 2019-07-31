@@ -1,6 +1,5 @@
 import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges } from '@angular/core';
 
-import { merge } from 'lodash';
 import { Grid } from './lib/grid';
 import { DataSource } from './lib/data-source/data-source';
 import { Row } from './lib/data-set/row';
@@ -168,7 +167,7 @@ export class Ng2SmartTableComponent implements OnChanges {
   }
 
   prepareSettings(): Object {
-    return merge({}, this.defaultSettings, this.settings);
+    return Object.assign({}, this.defaultSettings, this.settings);
   }
 
   changePage($event: any) {
