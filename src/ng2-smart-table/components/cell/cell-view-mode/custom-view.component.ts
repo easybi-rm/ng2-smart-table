@@ -10,7 +10,6 @@ import {
 
 import { Cell } from '../../../lib/data-set/cell';
 import { ViewCell } from './view-cell';
-import { merge } from 'lodash';
 
 @Component({
   selector: 'custom-view-component',
@@ -52,7 +51,7 @@ export class CustomViewComponent implements OnInit, OnDestroy {
   }
 
   protected patchInstance() {
-    merge(this.customComponent.instance, this.getPatch());
+    Object.assign(this.customComponent.instance, this.getPatch());
   }
 
   protected getPatch(): ViewCell {

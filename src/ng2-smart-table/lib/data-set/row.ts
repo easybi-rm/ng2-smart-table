@@ -1,7 +1,7 @@
 import { Cell } from './cell';
 import { Column } from './column';
 import { DataSet } from './data-set';
-import { cloneDeep } from 'lodash';
+import { deepExtend } from '../helpers';
 
 export class Row {
 
@@ -31,7 +31,7 @@ export class Row {
   }
 
   getNewData(): any {
-    const values = cloneDeep(this.data);
+    const values = deepExtend({}, this.data);
     this.getCells().forEach((cell) => values[cell.getColumn().id] = cell.newValue);
     return values;
   }

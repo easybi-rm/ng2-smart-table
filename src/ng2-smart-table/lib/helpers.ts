@@ -1,5 +1,3 @@
-import { cloneDeep } from 'lodash';
-
 /**
  * Extending object that entered in first argument.
  *
@@ -9,7 +7,7 @@ import { cloneDeep } from 'lodash';
  * object as first argument, like this:
  *   deepExtend({}, yourObj_1, [yourObj_N]);
  */
-export const deepExtend = function(...objects: Array<any>): any {
+export function deepExtend(...objects: Array<any>): any {
   if (arguments.length < 1 || typeof arguments[0] !== 'object') {
     return false;
   }
@@ -49,7 +47,7 @@ export const deepExtend = function(...objects: Array<any>): any {
 
         // just clone arrays (and recursive clone objects inside)
       } else if (Array.isArray(val)) {
-        target[key] = cloneDeep(val);
+        target[key] = deepExtend({}, val);
         return;
 
         // overwrite by new value if source isn't object or array
@@ -66,12 +64,23 @@ export const deepExtend = function(...objects: Array<any>): any {
   });
 
   return target;
-};
+}
+
+export function clearObject(object: { [key: string]: any }): {} {
+  Object.keys(object).forEach((key) => {
+    delete object[key];
+  });
+  return object;
+}
+
+export function clearAssign(target: { [key: string]: any }, object: { [key: string]: any }): { [key: string]: any } {
+  clearObject(target);
+  Object.assign(target, object);
+  return target;
+}
 
 export class Deferred {
-
   promise: Promise<any>;
-
   resolve: any;
   reject: any;
 
