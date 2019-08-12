@@ -21,55 +21,52 @@ export function deepExtend(...objects: Array<any>): any {
   // convert arguments to array and cut off target object
   const args = Array.prototype.slice.call(arguments, 1);
 
-  let val, src;
-
   args.forEach((obj: any) => {
     // skip argument if it is array or isn't object
     if (typeof obj !== 'object' || Array.isArray(obj)) {
       return;
     }
 
-    Object.keys(obj).forEach(function (key) {
-      src = target[key]; // source value
-      val = obj[key]; // new value
+    Object.keys(obj)
+      .forEach(function (key) {
+        const src = target[key]; // source value
+        const val = obj[key]; // new value
 
-      // recursion prevention
-      if (val === target) {
-        return;
-
-        /**
-         * if new value isn't object then just overwrite by new value
-         * instead of extending.
-         */
-      } else if (typeof val !== 'object' || val === null) {
-        target[key] = val;
-        return;
-
-        // just clone arrays (and recursive clone objects inside)
-      } else if (Array.isArray(val)) {
-        target[key] = deepExtend({}, val);
-        return;
-
-        // overwrite by new value if source isn't object or array
-      } else if (typeof src !== 'object' || src === null || Array.isArray(src)) {
-        target[key] = deepExtend({}, val);
-        return;
-
-        // source value and new value is objects both, extending...
-      } else {
-        target[key] = deepExtend(src, val);
-        return;
-      }
-    });
+        // recursion prevention
+        if (val === target) {
+          // do not extend target by itself
+        } else if (typeof val !== 'object' || val === null) {
+          /**
+           * if new value isn't object then just overwrite by new value
+           * instead of extending.
+           */
+          target[key] = val;
+        } else if (Array.isArray(val)) {
+          // just clone arrays (and recursive clone objects inside)
+          target[key] = val.map((item) => {
+            if (typeof item !== 'object' || item === null) {
+              return item;
+            }
+            return deepExtend({}, item);
+          });
+        } else if (typeof src !== 'object' || src === null || Array.isArray(src)) {
+          // overwrite by new value if source isn't object or array
+          target[key] = deepExtend({}, val);
+        } else {
+          // source value and new value is objects both, extending...
+          target[key] = deepExtend(src, val);
+        }
+      });
   });
 
   return target;
 }
 
 export function clearObject(object: { [key: string]: any }): {} {
-  Object.keys(object).forEach((key) => {
-    delete object[key];
-  });
+  Object.keys(object)
+    .forEach((key) => {
+      delete object[key];
+    });
   return object;
 }
 
@@ -87,7 +84,7 @@ export class Deferred {
   constructor() {
     this.promise = new Promise((resolve, reject) => {
       this.resolve = resolve;
-      this.reject = reject;
+      this.reject  = reject;
     });
   }
 }
@@ -95,7 +92,7 @@ export class Deferred {
 // getDeepFromObject({result: {data: 1}}, 'result.data', 2); // returns 1
 export function getDeepFromObject(object: any = {}, name: string, defaultValue?: any) {
   const keys = name.split('.');
-  let level = object;
+  let level  = object;
   keys.forEach((k) => {
     if (level && typeof level[k] !== 'undefined') {
       level = level[k];
